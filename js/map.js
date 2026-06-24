@@ -36,21 +36,21 @@ function createMap(containerId, center, zoom) {
  * @returns {object} AMap.Marker
  */
 function addHotelMarker(map, hotel) {
+  var shortName = hotel.name;
+  if (shortName.length > 10) { shortName = shortName.slice(0, 9) + '…'; }
+
+  var content = '<div style="background:#3498DB;color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;border:3px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,0.35);">🏨</div>';
+
   var marker = new AMap.Marker({
     position: [hotel.lng, hotel.lat],
-    title: hotel.name,
-    icon: new AMap.Icon({
-      size: new AMap.Size(32, 40),
-      image: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
-      imageSize: new AMap.Size(32, 40),
-      imageOffset: new AMap.Pixel(0, 0)
-    }),
+    content: content,
+    offset: new AMap.Pixel(-18, -18),
+    zIndex: 100,
     label: {
-      content: '<div style="background:#3498DB;color:#fff;padding:3px 8px;border-radius:10px;font-size:12px;white-space:nowrap;">🏨 ' + hotel.name + '</div>',
+      content: '<div style="background:#3498DB;color:#fff;padding:4px 10px;border-radius:12px;font-size:13px;font-weight:600;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.2);">🏨 ' + shortName + '</div>',
       direction: 'top',
       offset: new AMap.Pixel(0, -8)
-    },
-    zIndex: 100
+    }
   });
   marker.setMap(map);
   return marker;
