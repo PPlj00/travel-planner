@@ -107,11 +107,15 @@ function initCityMap(city) {
   _mapState[city].map = map;
   mapsInitialized[city] = true;
 
-  // 用高德 Geocoder 修正酒店坐标，然后标注
+  // 先用默认坐标添加酒店标记
+  var hotel = HOTELS[city];
+  var hotelMarker = addHotelMarker(map, hotel);
+  _mapState[city].hotelMarker = hotelMarker;
+  map.setCenter([hotel.lng, hotel.lat]);
+
+  // 异步用 Geocoder 修正酒店坐标，成功后更新标记位置
   updateHotelCoords(city, function() {
-    var hotel = HOTELS[city];
-    var hotelMarker = addHotelMarker(map, hotel);
-    _mapState[city].hotelMarker = hotelMarker;
+    hotelMarker.setPosition([hotel.lng, hotel.lat]);
     map.setCenter([hotel.lng, hotel.lat]);
   });
 
