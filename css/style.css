@@ -130,3 +130,388 @@ html, body {
 .tab-btn.active {
   color: var(--color-primary);
 }
+
+/* === 行程时间线 === */
+.timeline {
+  padding: 20px;
+  position: relative;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 36px;
+  top: 24px;
+  bottom: 24px;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--color-primary), #764ba2);
+  border-radius: 2px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 0;
+  position: relative;
+}
+
+.timeline-icon {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 1;
+  border: 3px solid var(--color-primary);
+}
+
+.timeline-card {
+  flex: 1;
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.timeline-card .card-date {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-bottom: 4px;
+}
+
+.timeline-card .card-route {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.timeline-card .card-route .arrow {
+  margin: 0 8px;
+  color: var(--color-text-secondary);
+}
+
+.timeline-card .card-info {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+.timeline-card .card-type {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  background: #EEF2FF;
+  color: var(--color-primary);
+  margin-top: 6px;
+}
+
+/* === FAB 浮动按钮 === */
+.fab {
+  position: absolute;
+  bottom: 24px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--color-primary);
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(74, 144, 217, 0.4);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fab:active {
+  transform: scale(0.92);
+  box-shadow: 0 2px 8px rgba(74, 144, 217, 0.3);
+}
+
+/* === Sheet 遮罩 === */
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 200;
+  transition: opacity 0.3s;
+}
+
+.sheet-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* === 底部 Sheet === */
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  width: 100%;
+  max-width: 480px;
+  max-height: 80vh;
+  background: var(--color-surface);
+  border-radius: 20px 20px 0 0;
+  z-index: 201;
+  padding: 12px 20px 24px;
+  padding-bottom: calc(24px + var(--safe-bottom));
+  overflow-y: auto;
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.12);
+}
+
+.bottom-sheet.hidden {
+  transform: translateX(-50%) translateY(100%);
+}
+
+.sheet-handle {
+  width: 36px;
+  height: 5px;
+  border-radius: 3px;
+  background: #D0D5DD;
+  margin: 0 auto 16px;
+}
+
+.bottom-sheet h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* === 类型选择按钮 === */
+.sheet-types {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.type-btn {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  font-size: 15px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+  min-height: 48px;
+}
+
+.type-btn.active[data-type="spot"] {
+  border-color: var(--color-spot);
+  background: #FEF0EF;
+  color: var(--color-spot);
+}
+
+.type-btn.active[data-type="food"] {
+  border-color: var(--color-food);
+  background: #FFF8EE;
+  color: var(--color-food);
+}
+
+/* === 搜索输入 === */
+.sheet-search {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.sheet-search input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.sheet-search input:focus {
+  border-color: var(--color-primary);
+}
+
+.poi-results {
+  list-style: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0 0 var(--radius) var(--radius);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.poi-results.hidden {
+  display: none;
+}
+
+.poi-results li {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.poi-results li:last-child {
+  border-bottom: none;
+}
+
+.poi-results li:active {
+  background: #F5F6FA;
+}
+
+.poi-results .poi-name {
+  font-weight: 500;
+}
+
+.poi-results .poi-addr {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+/* === 已选地点信息 === */
+.selected-info {
+  padding: 12px;
+  background: #F0F7FF;
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+}
+
+.selected-info.hidden {
+  display: none;
+}
+
+.selected-info .selected-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.selected-info .selected-address {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+/* === 备注输入 === */
+#note-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 15px;
+  resize: none;
+  outline: none;
+  font-family: inherit;
+  margin-bottom: 16px;
+}
+
+#note-input:focus {
+  border-color: var(--color-primary);
+}
+
+/* === Sheet 操作按钮 === */
+.sheet-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.btn-cancel {
+  background: #F0F0F0;
+  color: var(--color-text-secondary);
+}
+
+.btn-save {
+  background: var(--color-primary);
+  color: white;
+  transition: opacity 0.2s;
+}
+
+.btn-save:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* === 自定义信息窗口样式 === */
+.info-window-content {
+  padding: 8px 4px;
+  min-width: 180px;
+}
+
+.info-window-content .iw-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.info-window-content .iw-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  margin-right: 6px;
+}
+
+.info-window-content .iw-badge.spot {
+  background: #FEF0EF;
+  color: var(--color-spot);
+}
+
+.info-window-content .iw-badge.food {
+  background: #FFF8EE;
+  color: var(--color-food);
+}
+
+.info-window-content .iw-address {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-top: 6px;
+}
+
+.info-window-content .iw-note {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.info-window-content .iw-delete {
+  display: block;
+  margin-top: 10px;
+  padding: 6px 0;
+  width: 100%;
+  border: none;
+  background: none;
+  color: var(--color-spot);
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+  border-top: 1px solid var(--color-border);
+}
