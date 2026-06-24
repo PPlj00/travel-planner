@@ -123,3 +123,163 @@ fabBtns.wuhan.addEventListener('click', function() {
 
 // === 初始化渲染 ===
 renderItinerary();
+
+// === Sheet 面板逻辑 ===
+
+// 城市名称映射（内部标识 → 中文名）
+var _cityNames = {
+  chongqing: '重庆',
+  wuhan: '武汉'
+};
+
+/**
+ * 打开添加地点 Sheet
+ * @param {string} city - "chongqing" | "wuhan"
+ */
+function openAddSheet(city) {
+  currentSheetCity = city;
+
+  // 更新标题
+  document.getElementById('sheet-title').textContent = '添加地点 - ' + _cityNames[city];
+
+  // 重置类型为景点
+  currentSheetType = 'spot';
+  selectedPOI = null;
+  poiInput.value = '';
+  noteInput.value = '';
+
+  // 重置类型按钮激活状态
+  typeBtns.forEach(function(btn) {
+    btn.classList.remove('active');
+  });
+  document.querySelector('.type-btn[data-type="spot"]').classList.add('active');
+
+  // 隐藏搜索结果和已选信息
+  poiResults.classList.add('hidden');
+  selectedInfo.classList.add('hidden');
+
+  // 禁用保存按钮（未选 POI 时不可保存）
+  btnSave.disabled = true;
+
+  // 显示遮罩和 Sheet
+  sheetOverlay.classList.remove('hidden');
+  addSheet.classList.remove('hidden');
+
+  // 动画结束后聚焦搜索输入框
+  setTimeout(function() {
+    poiInput.focus();
+  }, 350);
+}
+
+/**
+ * 关闭添加地点 Sheet，清理状态
+ */
+function closeAddSheet() {
+  // 隐藏遮罩和 Sheet
+  sheetOverlay.classList.add('hidden');
+  addSheet.classList.add('hidden');
+
+  // 清除搜索防抖定时器
+  if (searchTimer) {
+    clearTimeout(searchTimer);
+    searchTimer = null;
+  }
+
+  // 清理 Sheet 状态
+  currentSheetCity = null;
+  selectedPOI = null;
+  poiInput.value = '';
+}
+
+// === 类型选择切换 ===
+typeBtns.forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    // 切换激活状态
+    typeBtns.forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    currentSheetType = btn.getAttribute('data-type');
+  });
+});
+
+// === 搜索输入：防抖 POI 搜索 ===
+poiInput.addEventListener('input', function() {
+  var keyword = poiInput.value.trim();
+
+  // 清除上一次的防抖定时器
+  if (searchTimer) {
+    clearTimeout(searchTimer);
+    searchTimer = null;
+  }
+
+  // 关键词太短时不搜索
+  if (keyword.length < 2) {
+    poiResults.classList.add('hidden');
+    return;
+  }
+
+  // 设置防抖定时器（300ms）
+  searchTimer = setTimeout(function() {
+    var cityName = _cityNames[currentSheetCity];
+    searchPOI(keyword, cityName, function(results) {
+      // 清空并渲染搜索结果列表
+      poiResults.innerHTML = '';
+
+      if (results.length === 0) {
+        poiResults.innerHTML = '<li class="poi-empty">未找到相关地点</li>';
+      } else {
+        results.forEach(function(poi) {
+          var li = document.createElement('li');
+          li.className = 'poi-item';
+          li.innerHTML = '<strong>' + poi.name + '</strong><span>' + (poi.address || '') + '</span>';
+          li.addEventListener('click', function() {
+            // 选中该 POI
+            selectedPOI = poi;
+
+            // 更新已选信息
+            selectedInfo.querySelector('.selected-name').textContent = poi.name;
+            selectedInfo.querySelector('.selected-address').textContent = poi.address || '';
+            selectedInfo.classList.remove('hidden');
+
+            // 隐藏搜索结果列表，清空搜索输入
+            poiResults.classList.add('hidden');
+            poiInput.value = '';
+
+            // 启用保存按钮
+            btnSave.disabled = false;
+          });
+          poiResults.appendChild(li);
+        });
+      }
+
+      // 显示搜索结果
+      poiResults.classList.remove('hidden');
+    });
+  }, 300);
+});
+
+// === 保存按钮：保存地点并刷新地图 ===
+btnSave.addEventListener('click', function() {
+  if (!selectedPOI || !currentSheetCity) return;
+
+  var spot = {
+    id: generateId(),
+    name: selectedPOI.name,
+    type: currentSheetType,
+    lat: selectedPOI.location.lat,
+    lng: selectedPOI.location.lng,
+    address: selectedPOI.address || '',
+    note: noteInput.value.trim()
+  };
+
+  saveSpot(currentSheetCity, spot);
+  refreshSpotMarkers(currentSheetCity);
+
+  // 关闭 Sheet
+  closeAddSheet();
+});
+
+// === 取消按钮 ===
+btnCancel.addEventListener('click', closeAddSheet);
+
+// === 遮罩点击关闭 ===
+sheetOverlay.addEventListener('click', closeAddSheet);
