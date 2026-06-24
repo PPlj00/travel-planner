@@ -283,3 +283,83 @@ btnCancel.addEventListener('click', closeAddSheet);
 
 // === 遮罩点击关闭 ===
 sheetOverlay.addEventListener('click', closeAddSheet);
+
+// === 信息窗口与删除功能 ===
+
+/**
+ * 全局标记点击回调（供 map.js 调用）
+ * @param {object} spot - 地点数据
+ * @param {object} marker - 高德 Marker 实例
+ */
+function _onMarkerClick(spot, marker) {
+  showMarkerInfo(spot, marker);
+}
+
+/**
+ * 显示自定义信息窗口
+ * @param {object} spot - 地点数据
+ * @param {object} marker - 高德 Marker 实例
+ */
+function showMarkerInfo(spot, marker) {
+  // 关闭之前打开的 InfoWindow
+  if (_currentInfoWindow) {
+    _currentInfoWindow.close();
+  }
+
+  var typeLabel = spot.type === 'spot' ? '景点' : '美食';
+  var typeClass = spot.type === 'spot' ? 'spot' : 'food';
+
+  var html = '<div class="info-window-content">';
+  html += '  <div class="iw-name">' + spot.name + '</div>';
+  html += '  <div class="iw-badge ' + typeClass + '">' + typeLabel + '</div>';
+  if (spot.address) {
+    html += '  <div class="iw-address">' + spot.address + '</div>';
+  }
+  if (spot.note) {
+    html += '  <div class="iw-note">' + spot.note + '</div>';
+  }
+  html += '  <button class="iw-delete" data-spot-id="' + spot.id + '">删除</button>';
+  html += '</div>';
+
+  var infoWindow = new AMap.InfoWindow({
+    content: html,
+    offset: new AMap.Pixel(0, -30),
+    closeWhenClickMap: true
+  });
+
+  infoWindow.open(marker.getMap(), marker.getPosition());
+  _currentInfoWindow = infoWindow;
+
+  // 等 DOM 渲染完成后绑定删除按钮事件
+  setTimeout(function() {
+    var deleteBtn = document.querySelector('.iw-delete[data-spot-id="' + spot.id + '"]');
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', function() {
+        deleteSpotAndMarker(spot.id);
+      });
+    }
+  }, 0);
+}
+
+/**
+ * 遍历两个城市删除指定地点，并刷新地图
+ * @param {string} spotId - 地点唯一 ID
+ */
+function deleteSpotAndMarker(spotId) {
+  // 关闭当前 InfoWindow
+  if (_currentInfoWindow) {
+    _currentInfoWindow.close();
+    _currentInfoWindow = null;
+  }
+
+  // 遍历两个城市查找并删除
+  var cities = ['chongqing', 'wuhan'];
+  cities.forEach(function(city) {
+    deleteSpot(city, spotId);
+  });
+
+  // 刷新两个城市的地图标记
+  cities.forEach(function(city) {
+    refreshSpotMarkers(city);
+  });
+}
