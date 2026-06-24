@@ -81,6 +81,12 @@ function switchTab(tabName) {
   // 懒初始化地图：首次切换到城市 Tab 才初始化
   if ((tabName === 'chongqing' || tabName === 'wuhan') && !mapsInitialized[tabName]) {
     initCityMap(tabName);
+  } else if (mapsInitialized[tabName]) {
+    // 切换回已初始化的地图时，触发 resize
+    setTimeout(function() {
+      var m = _mapState[tabName].map;
+      if (m) m.resize();
+    }, 100);
   }
 }
 
@@ -229,8 +235,7 @@ poiInput.addEventListener('input', function() {
       } else {
         results.forEach(function(poi) {
           var li = document.createElement('li');
-          li.className = 'poi-item';
-          li.innerHTML = '<strong>' + poi.name + '</strong><span>' + (poi.address || '') + '</span>';
+          li.innerHTML = '<div class="poi-name">' + poi.name + '</div><div class="poi-addr">' + poi.address + '</div>';
           li.addEventListener('click', function() {
             // 选中该 POI
             selectedPOI = poi;
@@ -318,7 +323,7 @@ function showMarkerInfo(spot, marker) {
   if (spot.note) {
     html += '  <div class="iw-note">' + spot.note + '</div>';
   }
-  html += '  <button class="iw-delete" data-spot-id="' + spot.id + '">删除</button>';
+  html += '  <button class="iw-delete" data-spot-id="' + spot.id + '">🗑️ 删除</button>';
   html += '</div>';
 
   var infoWindow = new AMap.InfoWindow({
