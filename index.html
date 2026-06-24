@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>我的旅游行程</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- 内容区域 -->
+    <main id="content">
+      <!-- 行程 Tab -->
+      <section id="tab-itinerary" class="tab-content">
+        <div class="page-header">
+          <h1>🗺️ 我的行程</h1>
+          <p class="page-subtitle">6.29 — 7.5</p>
+        </div>
+        <div id="timeline" class="timeline"></div>
+      </section>
+
+      <!-- 重庆地图 Tab -->
+      <section id="tab-chongqing" class="tab-content hidden">
+        <div id="map-chongqing" class="map-container"></div>
+        <button id="fab-chongqing" class="fab" title="添加地点">＋</button>
+      </section>
+
+      <!-- 武汉地图 Tab -->
+      <section id="tab-wuhan" class="tab-content hidden">
+        <div id="map-wuhan" class="map-container"></div>
+        <button id="fab-wuhan" class="fab" title="添加地点">＋</button>
+      </section>
+    </main>
+
+    <!-- 底部导航栏 -->
+    <nav id="tab-bar">
+      <button class="tab-btn active" data-tab="itinerary">
+        <span class="tab-icon">📋</span>
+        <span class="tab-label">行程</span>
+      </button>
+      <button class="tab-btn" data-tab="chongqing">
+        <span class="tab-icon">🏙️</span>
+        <span class="tab-label">重庆</span>
+      </button>
+      <button class="tab-btn" data-tab="wuhan">
+        <span class="tab-icon">🌆</span>
+        <span class="tab-label">武汉</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- 添加地点 Sheet 遮罩 -->
+  <div id="sheet-overlay" class="sheet-overlay hidden"></div>
+
+  <!-- 添加地点底部 Sheet -->
+  <div id="add-sheet" class="bottom-sheet">
+    <div class="sheet-handle"></div>
+    <h2 id="sheet-title">添加地点</h2>
+
+    <!-- 类型选择 -->
+    <div class="sheet-types">
+      <button class="type-btn active" data-type="spot">🏔️ 景点</button>
+      <button class="type-btn" data-type="food">🍜 美食</button>
+    </div>
+
+    <!-- 搜索输入 -->
+    <div class="sheet-search">
+      <input type="text" id="poi-search-input" placeholder="输入地点名称搜索…" autocomplete="off">
+      <ul id="poi-results" class="poi-results hidden"></ul>
+    </div>
+
+    <!-- 已选中的地点信息 -->
+    <div id="selected-info" class="selected-info hidden">
+      <p class="selected-name"></p>
+      <p class="selected-address"></p>
+    </div>
+
+    <!-- 备注 -->
+    <textarea id="note-input" placeholder="备注（可选）" rows="2" maxlength="200"></textarea>
+
+    <!-- 操作按钮 -->
+    <div class="sheet-actions">
+      <button id="btn-cancel" class="btn btn-cancel">取消</button>
+      <button id="btn-save" class="btn btn-save" disabled>保存</button>
+    </div>
+  </div>
+
+  <!-- 高德地图 JS API -->
+  <script src="https://webapi.amap.com/maps?v=2.0&key=232b574120ffd77a50ae4664bcc3a507"></script>
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
