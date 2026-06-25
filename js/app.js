@@ -154,9 +154,11 @@ var planTextareas = {
   wuhan: document.getElementById('plan-wuhan')
 };
 
-// 首次加载：导入预置的重庆数据
-var existingSpots = loadSpots('chongqing');
-if (existingSpots.length === 0 && typeof CHONGQING_SEED !== 'undefined') {
+// 导入预置的重庆数据（如果种子版本更新则重新导入）
+var seedVersion = localStorage.getItem('seed_version');
+if (seedVersion !== '1' && typeof CHONGQING_SEED !== 'undefined') {
+  // 清除旧数据，导入新种子
+  localStorage.removeItem('chongqing_spots');
   CHONGQING_SEED.forEach(function(item) {
     var spot = {
       id: generateId(),
@@ -169,6 +171,7 @@ if (existingSpots.length === 0 && typeof CHONGQING_SEED !== 'undefined') {
     };
     saveSpot('chongqing', spot);
   });
+  localStorage.setItem('seed_version', '1');
 }
 
 // 加载已有规划
