@@ -79,6 +79,10 @@ html, body {
   overflow: hidden;
 }
 
+#tab-chongqing.hidden, #tab-wuhan.hidden {
+  display: none !important;
+}
+
 /* === 页面头部 === */
 .page-header {
   padding: 24px 20px 12px;
