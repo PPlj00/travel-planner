@@ -40,15 +40,29 @@ function renderItinerary() {
     html += '  <div class="timeline-icon">' + item.icon + '</div>';
     html += '  <div class="timeline-card">';
     html += '    <div class="card-date">' + item.date + '</div>';
-    html += '    <div class="card-route">' + item.from + '<span class="arrow"> → </span>' + item.to + '</div>';
+
+    if (item.type === 'stay') {
+      // 住宿/游玩卡片
+      html += '    <div class="card-route" style="font-size:16px;">' + item.from + '</div>';
+    } else {
+      // 交通卡片
+      html += '    <div class="card-route">' + item.from + '<span class="arrow"> → </span>' + item.to + '</div>';
+    }
+
     html += '    <div class="card-info">';
     if (item.time) {
-      html += item.time + ' · ' + item.label;
-    } else {
+      html += '⏰ ' + item.time;
+    }
+    if (item.label) {
+      if (item.time) html += ' · ';
       html += item.label;
     }
     html += '    </div>';
-    html += '    <span class="card-type">' + item.label + '</span>';
+
+    if (item.detail) {
+      html += '    <div class="card-detail">' + item.detail + '</div>';
+    }
+
     html += '  </div>';
     html += '</div>';
   });
