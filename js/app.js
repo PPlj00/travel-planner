@@ -148,6 +148,47 @@ fabBtns.wuhan.addEventListener('click', function() {
 // === 初始化渲染 ===
 renderItinerary();
 
+// === 城市行程规划（自动保存到 localStorage） ===
+var planTextareas = {
+  chongqing: document.getElementById('plan-chongqing'),
+  wuhan: document.getElementById('plan-wuhan')
+};
+
+// 首次加载：导入预置的重庆数据
+var existingSpots = loadSpots('chongqing');
+if (existingSpots.length === 0 && typeof CHONGQING_SEED !== 'undefined') {
+  CHONGQING_SEED.forEach(function(item) {
+    var spot = {
+      id: generateId(),
+      name: item.name,
+      type: item.type,
+      lat: item.lat,
+      lng: item.lng,
+      address: item.address,
+      note: item.note
+    };
+    saveSpot('chongqing', spot);
+  });
+}
+
+// 加载已有规划
+['chongqing', 'wuhan'].forEach(function(city) {
+  var saved = localStorage.getItem(city + '_plan');
+  if (saved) {
+    if (planTextareas[city]) planTextareas[city].value = saved;
+  } else if (city === 'chongqing' && typeof CHONGQING_PLAN !== 'undefined') {
+    // 首次加载预填重庆规划
+    if (planTextareas[city]) planTextareas[city].value = CHONGQING_PLAN;
+    localStorage.setItem(city + '_plan', CHONGQING_PLAN);
+  }
+  // 输入时自动保存
+  if (planTextareas[city]) {
+    planTextareas[city].addEventListener('input', function() {
+      localStorage.setItem(city + '_plan', planTextareas[city].value);
+    });
+  }
+});
+
 // === Sheet 面板逻辑 ===
 
 // 城市名称映射（内部标识 → 中文名）

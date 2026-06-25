@@ -63,6 +63,11 @@ html, body {
   display: none;
 }
 
+#tab-chongqing, #tab-wuhan {
+  display: flex;
+  flex-direction: column;
+}
+
 /* === 页面头部 === */
 .page-header {
   padding: 24px 20px 12px;
@@ -81,11 +86,51 @@ html, body {
   margin-top: 4px;
 }
 
+/* === 城市地图 Tab 布局 === */
+.map-wrapper {
+  position: relative;
+  height: 45vh;
+  flex-shrink: 0;
+}
+
 /* === 地图容器 === */
 .map-container {
   width: 100%;
-  height: calc(100vh - var(--tab-height));
-  max-height: calc(100vh - var(--tab-height));
+  height: 100%;
+}
+
+/* === 城市行程规划 === */
+.city-plan {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.city-plan h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--color-text);
+}
+
+.plan-textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  outline: none;
+}
+
+.plan-textarea:focus {
+  border-color: var(--color-primary);
 }
 
 /* === 底部导航栏 === */
@@ -219,9 +264,9 @@ html, body {
 
 /* === FAB 浮动按钮 === */
 .fab {
-  position: fixed;
-  bottom: calc(var(--tab-height) + 20px);
-  right: 20px;
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
   width: 56px;
   height: 56px;
   border-radius: 50%;
