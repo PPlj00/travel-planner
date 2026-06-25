@@ -48,29 +48,31 @@ html, body {
 /* === 内容区域 === */
 #content {
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-bottom: var(--tab-height);
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
+  position: relative;
 }
 
 /* === Tab 内容 === */
 .tab-content {
-  min-height: 100%;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: calc(100vh - var(--tab-height));
 }
 
 .tab-content.hidden {
   display: none !important;
 }
 
+#tab-itinerary {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 20px;
+}
+
 #tab-chongqing, #tab-wuhan {
   display: flex !important;
   flex-direction: column;
-  height: calc(100vh - var(--tab-height));
-}
-
-#tab-itinerary.hidden {
-  display: none !important;
+  overflow: hidden;
 }
 
 /* === 页面头部 === */
