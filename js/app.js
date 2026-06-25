@@ -121,6 +121,9 @@ function initCityMap(city) {
   _mapState[city].map = map;
   mapsInitialized[city] = true;
 
+  // 绘制地铁线路
+  drawSubwayLines(map, city);
+
   // 先用默认坐标添加酒店标记
   var hotel = HOTELS[city];
   var hotelMarker = addHotelMarker(map, hotel);

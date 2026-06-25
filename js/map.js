@@ -22,11 +22,46 @@ function createMap(containerId, center, zoom) {
     zoom: zoom,
     center: center,
     resizeEnable: true,
-    // 显示地铁线路图层（需要高德支持）
-    features: ['bg', 'road', 'building', 'point'],
-    mapStyle: 'amap://styles/light'
+    features: ['bg', 'road'],       // 只显示底图+道路，去掉了建筑和默认POI
+    mapStyle: 'amap://styles/light',
+    showBuildingBlock: false        // 不显示3D建筑
   });
   return map;
+}
+
+/**
+ * 在地图上绘制地铁线路和关键站点
+ * @param {object} map - AMap.Map 实例
+ * @param {string} city - "chongqing" | "wuhan"
+ */
+function drawSubwayLines(map, city) {
+  if (city !== 'chongqing' || typeof SUBWAY_LINES === 'undefined') return;
+
+  SUBWAY_LINES.forEach(function(line) {
+    var polyline = new AMap.Polyline({
+      path: line.path,
+      strokeColor: line.color,
+      strokeWeight: 5,
+      strokeOpacity: 0.7,
+      lineJoin: 'round',
+      lineCap: 'round',
+      zIndex: 60,
+      showDir: false
+    });
+    polyline.setMap(map);
+  });
+
+  if (typeof SUBWAY_STATIONS !== 'undefined') {
+    SUBWAY_STATIONS.forEach(function(st) {
+      var marker = new AMap.Marker({
+        position: [st.lng, st.lat],
+        content: '<div style="background:#fff;color:#333;width:8px;height:8px;border-radius:50%;border:2px solid #1890ff;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div>',
+        offset: new AMap.Pixel(-4, -4),
+        zIndex: 65
+      });
+      marker.setMap(map);
+    });
+  }
 }
 
 /**
