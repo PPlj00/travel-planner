@@ -60,12 +60,17 @@ html, body {
 }
 
 .tab-content.hidden {
-  display: none;
+  display: none !important;
 }
 
 #tab-chongqing, #tab-wuhan {
-  display: flex;
+  display: flex !important;
   flex-direction: column;
+  height: calc(100vh - var(--tab-height));
+}
+
+#tab-itinerary.hidden {
+  display: none !important;
 }
 
 /* === 页面头部 === */
@@ -102,27 +107,31 @@ html, body {
 /* === 城市行程规划 === */
 .city-plan {
   flex: 1;
-  padding: 16px;
+  padding: 12px 16px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
 }
 
 .city-plan h3 {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   color: var(--color-text);
+  flex-shrink: 0;
 }
 
 .plan-textarea {
   width: 100%;
-  min-height: 200px;
+  flex: 1;
+  min-height: 250px;
   padding: 12px 14px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.6;
-  resize: vertical;
+  resize: none;
   font-family: inherit;
   color: var(--color-text);
   background: var(--color-surface);

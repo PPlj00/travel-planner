@@ -157,7 +157,6 @@ var planTextareas = {
 // 导入预置的重庆数据（如果种子版本更新则重新导入）
 var seedVersion = localStorage.getItem('seed_version');
 if (seedVersion !== '1' && typeof CHONGQING_SEED !== 'undefined') {
-  // 清除旧数据，导入新种子
   localStorage.removeItem('chongqing_spots');
   CHONGQING_SEED.forEach(function(item) {
     var spot = {
@@ -172,6 +171,7 @@ if (seedVersion !== '1' && typeof CHONGQING_SEED !== 'undefined') {
     saveSpot('chongqing', spot);
   });
   localStorage.setItem('seed_version', '1');
+  console.log('✅ 已导入 ' + CHONGQING_SEED.length + ' 个重庆预置地点');
 }
 
 // 加载已有规划
@@ -180,9 +180,11 @@ if (seedVersion !== '1' && typeof CHONGQING_SEED !== 'undefined') {
   if (saved) {
     if (planTextareas[city]) planTextareas[city].value = saved;
   } else if (city === 'chongqing' && typeof CHONGQING_PLAN !== 'undefined') {
-    // 首次加载预填重庆规划
-    if (planTextareas[city]) planTextareas[city].value = CHONGQING_PLAN;
-    localStorage.setItem(city + '_plan', CHONGQING_PLAN);
+    if (planTextareas[city]) {
+      planTextareas[city].value = CHONGQING_PLAN;
+      localStorage.setItem(city + '_plan', CHONGQING_PLAN);
+      console.log('✅ 已预填重庆每日行程规划');
+    }
   }
   // 输入时自动保存
   if (planTextareas[city]) {
