@@ -22,7 +22,7 @@ var ITINERARY = [
     detail: "航班约4h15m"
   },
   {
-    date: "6月30日 — 7月2日",
+    date: "6月30日 — 7月3日",
     time: "",
     from: "重庆",
     to: "",
@@ -32,7 +32,7 @@ var ITINERARY = [
     detail: "住宿：Asiam亚美丽晶江景酒店（观音桥店）"
   },
   {
-    date: "7月2日",
+    date: "7月3日",
     time: "13:24 — 18:07",
     from: "重庆北",
     to: "汉口",
@@ -42,7 +42,7 @@ var ITINERARY = [
     detail: "约4h43m"
   },
   {
-    date: "7月2日 — 7月5日",
+    date: "7月3日 — 7月5日",
     time: "",
     from: "武汉",
     to: "",
